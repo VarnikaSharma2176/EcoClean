@@ -1,7 +1,11 @@
 import { Routes, Route } from "react-router-dom";
 
+import PublicLayout from "../components/layout/PublicLayout";
+
 import ProtectedRoute from "./ProtectedRoute";
 import PublicRoute from "./PublicRoute";
+
+import LandingPage from "../pages/public/LandingPage";
 
 const Placeholder = ({ title }) => (
   <div
@@ -9,7 +13,7 @@ const Placeholder = ({ title }) => (
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-      height: "100vh",
+      height: "70vh",
       fontSize: "2rem",
       fontWeight: "600",
     }}
@@ -23,14 +27,20 @@ const AppRoutes = () => {
     <Routes>
       <Route
         path="/"
-        element={<Placeholder title="Landing Page" />}
+        element={
+          <PublicLayout>
+            <LandingPage />
+          </PublicLayout>
+        }
       />
 
       <Route
         path="/login"
         element={
           <PublicRoute>
-            <Placeholder title="Login Page" />
+            <PublicLayout>
+              <Placeholder title="Login Page" />
+            </PublicLayout>
           </PublicRoute>
         }
       />
@@ -39,8 +49,19 @@ const AppRoutes = () => {
         path="/register"
         element={
           <PublicRoute>
-            <Placeholder title="Register Page" />
+            <PublicLayout>
+              <Placeholder title="Register Page" />
+            </PublicLayout>
           </PublicRoute>
+        }
+      />
+
+      <Route
+        path="/knowledge"
+        element={
+          <PublicLayout>
+            <Placeholder title="Knowledge Hub" />
+          </PublicLayout>
         }
       />
 
