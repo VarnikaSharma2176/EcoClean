@@ -8,6 +8,7 @@ import categoryRoutes from "./routes/category.routes.js";
 import pickupRoutes from "./routes/pickup.routes.js";
 import addressRoutes from "./routes/address.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
+import knowledgeRoutes from "./routes/knowledge.routes.js";
 
 const app = express();
 
@@ -29,5 +30,6 @@ app.use("/api/v1/categories", categoryRoutes);
 app.use("/api/v1/pickups", pickupRoutes);
 app.use("/api/v1/addresses", addressRoutes);
 app.use("/api/v1/admin", adminRoutes);
+app.use("/api/v1/knowledge", knowledgeRoutes);
 
 export default app;
