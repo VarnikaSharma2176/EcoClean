@@ -1,111 +1,127 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import {
-  FaEnvelope,
-  FaLock,
-  FaUser,
-  FaTruck,
-  FaUserShield,
-} from "react-icons/fa";
-import AuthLayout from "../../components/auth/AuthLayout";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
-function LoginPage() {
-  const [role, setRole] = useState("Citizen");
+import { loginUser } from "../../services/auth.service";
+import { useAuth } from "../../context/AuthContext";
+
+const LoginPage = () => {
+  const navigate = useNavigate();
+
+  const { login } = useAuth();
+
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      setLoading(true);
+
+      const response = await loginUser(formData);
+
+      login(response.data.data.token, response.data.data.user);
+
+      toast.success("Login successful!");
+
+      navigate("/dashboard");
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || "Login failed."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <AuthLayout
-      title="Welcome Back"
-      subtitle="Login to continue your EcoLoop journey."
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "80vh",
+      }}
     >
-      <form className="space-y-5">
-
-        <div>
-          <label className="mb-3 block font-medium">
-            Login As
-          </label>
-
-          <div className="grid grid-cols-3 gap-3">
-
-            <button
-              type="button"
-              onClick={() => setRole("Citizen")}
-              className={`rounded-xl border p-4 text-center transition ${
-                role === "Citizen"
-                  ? "border-green-700 bg-green-100"
-                  : "hover:bg-gray-100"
-              }`}
-            >
-              <FaUser className="mx-auto mb-2 text-xl" />
-              Citizen
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setRole("Collector")}
-              className={`rounded-xl border p-4 text-center transition ${
-                role === "Collector"
-                  ? "border-green-700 bg-green-100"
-                  : "hover:bg-gray-100"
-              }`}
-            >
-              <FaTruck className="mx-auto mb-2 text-xl" />
-              Collector
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setRole("Administrator")}
-              className={`rounded-xl border p-4 text-center transition ${
-                role === "Administrator"
-                  ? "border-green-700 bg-green-100"
-                  : "hover:bg-gray-100"
-              }`}
-            >
-              <FaUserShield className="mx-auto mb-2 text-xl" />
-              Admin
-            </button>
-
-          </div>
-        </div>
-
-        <div className="relative">
-          <FaEnvelope className="absolute left-4 top-4 text-gray-400" />
-
-          <input
-            type="email"
-            placeholder="Email Address"
-            className="w-full rounded-lg border py-3 pl-12 pr-4"
-          />
-        </div>
-
-        <div className="relative">
-          <FaLock className="absolute left-4 top-4 text-gray-400" />
-
-          <input
-            type="password"
-            placeholder="Password"
-            className="w-full rounded-lg border py-3 pl-12 pr-4"
-          />
-        </div>
-
-        <button className="w-full rounded-lg bg-green-700 py-3 text-white hover:bg-green-800">
+      <form
+        onSubmit={handleSubmit}
+        style={{
+          width: "420px",
+          padding: "40px",
+          background: "#fff",
+          borderRadius: "12px",
+          boxShadow: "0 0 15px rgba(0,0,0,.08)",
+        }}
+      >
+        <h2
+          style={{
+            textAlign: "center",
+            marginBottom: "30px",
+            color: "#2E7D32",
+          }}
+        >
           Login
-        </button>
+        </h2>
 
-        {role === "Citizen" && (
-          <p className="text-center">
-            New Citizen?{" "}
-            <Link
-              to="/register"
-              className="font-semibold text-green-700"
-            >
-              Register Here
-            </Link>
-          </p>
-        )}
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          value={formData.email}
+          onChange={handleChange}
+          required
+          style={inputStyle}
+        />
+
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          value={formData.password}
+          onChange={handleChange}
+          required
+          style={inputStyle}
+        />
+
+        <button
+          type="submit"
+          disabled={loading}
+          style={buttonStyle}
+        >
+          {loading ? "Logging in..." : "Login"}
+        </button>
       </form>
-    </AuthLayout>
+    </div>
   );
-}
+};
+
+const inputStyle = {
+  width: "100%",
+  padding: "14px",
+  marginBottom: "18px",
+  border: "1px solid #ddd",
+  borderRadius: "8px",
+};
+
+const buttonStyle = {
+  width: "100%",
+  padding: "14px",
+  background: "#2E7D32",
+  color: "#fff",
+  border: "none",
+  borderRadius: "8px",
+};
 
 export default LoginPage;

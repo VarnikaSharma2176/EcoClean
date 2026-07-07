@@ -9,14 +9,22 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+const savedUser = localStorage.getItem("user");
 
-    const savedUser = localStorage.getItem("user");
+try {
+  if (
+    token &&
+    savedUser &&
+    savedUser !== "undefined"
+  ) {
+    setUser(JSON.parse(savedUser));
+  }
+} catch (error) {
+  localStorage.removeItem("user");
+  localStorage.removeItem("token");
+}
 
-    if (token && savedUser) {
-      setUser(JSON.parse(savedUser));
-    }
-
-    setLoading(false);
+setLoading(false);
   }, []);
 
   const login = (token, userData) => {
