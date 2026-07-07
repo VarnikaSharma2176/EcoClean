@@ -1,25 +1,17 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 
-import HomePage from "./pages/public/HomePage";
-import AboutPage from "./pages/public/AboutPage";
-import KnowledgeHubPage from "./pages/public/KnowledgeHubPage";
-import ContactPage from "./pages/public/ContactPage";
-
-import LoginPage from "./pages/auth/LoginPage";
-import RegisterPage from "./pages/auth/RegisterPage";
+import AppRoutes from "./routes/AppRoutes";
 
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/knowledge-hub" element={<KnowledgeHubPage />} />
-        <Route path="/contact" element={<ContactPage />} />
+      <Toaster
+        position="top-right"
+        reverseOrder={false}
+      />
 
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-      </Routes>
+      <AppRoutes />
     </BrowserRouter>
   );
 }
